@@ -1,0 +1,70 @@
+services:
+
+  pgdb:
+    container_name: agent_pgdb
+    hostname: pgdb
+    image: ankane/pgvector:latest
+    ports:
+      # - "5432:5432"
+        - 5432
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - agent_network
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: agent_open_webui
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - open_webui_data:/app/backend/data
+    ports:
+      - "3000:8080"
+    depends_on:
+        - pgdb
+    networks:
+      - agent_network
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: agent_ollama
+    hostname: ollama
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - agent_network
+
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: agent_litellm
+    hostname: litellm
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./litellm_config.yaml:/app/config.yaml:ro
+    ports:
+      - "4000:4000"
+    depends_on:
+        - pgdb
+    command: ["--config", "/app/config.yaml", "--port", "4000", "--num_workers", "1"]
+    networks:
+      - agent_network
+
+volumes:
+  postgres_data:
+  open_webui_data:
+  ollama_data:
+
+networks:
+    agent_network:
+        driver: bridge

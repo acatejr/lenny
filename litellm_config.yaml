@@ -1,0 +1,20 @@
+# model_list:
+#   - model_name: claude-4 ### RECEIVED MODEL NAME ###
+#     litellm_params: # all params accepted by litellm.completion() - https://docs.litellm.ai/docs/completion/input
+#       model: claude-opus-4-20250514 ### MODEL NAME sent to `litellm.completion()` ###
+#       api_key: "os.environ/ANTHROPIC_API_KEY" # does os.getenv("AZURE_API_KEY_EU")
+
+#   - model_name: ollama/codellama # The name you use in litellm.completion
+#     litellm_params:
+#       model: ollama/codellama:latest # The actual model identifier for the provider
+#       api_base: "http://ollama:11434" # Default, change if needed
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  database_url: os.environ/LITELLM_DATABASE_URL
+
+litellm_settings:
+  success_callback: ["langfuse"]
+  failure_callback: ["langfuse"]
+  set_verbose: true
+  json_logs: true
