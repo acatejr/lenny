@@ -7,7 +7,14 @@
 #   - model_name: ollama/codellama # The name you use in litellm.completion
 #     litellm_params:
 #       model: ollama/codellama:latest # The actual model identifier for the provider
-#       api_base: "http://ollama:11434" # Default, change if needed
+#       # api_base: "http://ollama:11434" # Default, change if needed
+
+model_list:
+   - model_name: ollama/llama3.2 # The name you use in litellm.completion
+     litellm_params:
+       model: llama3.2:latest # The actual model identifier for the provider
+       # api_base: "http://agent_ollama:11434" # Default, change if needed
+       api_base: "http://host.docker.internal:11434"
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
